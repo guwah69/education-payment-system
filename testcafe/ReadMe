@@ -1,0 +1,25 @@
+*** Getting started ***
+
+clone the application from repo (portal organisation)
+
+run: npm install
+
+vsts-npm-auth
+
+How to run test: 
+
+vsts-npm-auth
+
+npm install -g vsts-npm-auth
+
+vsts-npm-auth -C .npmrc
+- npm install -g vsts-npm-auth
+
+
+***** Run test *******
+
+*** start the app ***
+npm run start
+
+** run test **
+npm run testcafe:run

@@ -1,0 +1,4 @@
+{
+    "browsers": "chrome",
+    "tsConfigPath": "testcafe/tsconfig.json"
+}

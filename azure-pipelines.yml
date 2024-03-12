@@ -1,0 +1,102 @@
+trigger:
+  branches:
+    include:
+    - master
+    - refs/tags/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: RunTests
+  displayName: "Run Tests"
+  jobs:
+  - job: TestCafe
+    displayName: "TestCafe"
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '12.x'
+      displayName: 'Install Node.js'
+    - task: Npm@1
+      displayName: "npm install"
+      inputs:
+        command: 'install'
+        customRegistry: 'useFeed'
+        customFeed: 'b8db0229-c220-4583-b1d9-1111e482a1ce'
+    - script: |
+        npm run testcafe:ci
+      displayName: "Run testcafe tests"
+    - task: PublishTestResults@2
+      displayName: "Publish TestCafe test results"
+      condition: always()
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/report.xml'
+        testRunTitle: 'portal-organisations-$(Build.BuildId)-testcafe'
+  - job: Unit
+    displayName: "Unit Tests"
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '12.x'
+      displayName: 'Install Node.js'
+    - task: Npm@1
+      displayName: "npm install"
+      inputs:
+        command: 'install'
+        customRegistry: 'useFeed'
+        customFeed: 'b8db0229-c220-4583-b1d9-1111e482a1ce'
+    - script: |
+        npm run test:ci
+      displayName: "Run tests"
+    - task: PublishTestResults@2
+      displayName: "Publish unit test results"
+      condition: always()
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/junit.xml'
+        testRunTitle: 'portal-organisations-$(Build.BuildId)-unit'
+    - task: PublishCodeCoverageResults@1
+      displayName: "Publish unit test coverage"
+      condition: always()
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
+- stage: BuildAndPackage
+  dependsOn: RunTests
+  condition: and(succeeded(), startsWith(variables['build.sourceBranch'], 'refs/tags/v'))
+  displayName: "Build and package"
+  jobs:
+  - job: PublishPackage
+    displayName: "Publish Package"
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: 12.x
+      displayName: "Install Node.js"
+    - task: Npm@1
+      displayName: "npm install"
+      inputs:
+        command: 'install'
+        customRegistry: 'useFeed'
+        customFeed: 'b8db0229-c220-4583-b1d9-1111e482a1ce'
+    - task: Npm@1
+      displayName: 'npm build dist'
+      inputs:
+        command: custom
+        verbose: false
+        customCommand: "run dist"
+    - task: Npm@1
+      displayName: 'npm pack'
+      inputs:
+        command: custom
+        verbose: false
+        customCommand: pack
+    - task: Npm@1
+      displayName: 'npm publish'
+      inputs:
+        command: publish
+        verbose: false
+        publishRegistry: useFeed
+        publishFeed: 'b8db0229-c220-4583-b1d9-1111e482a1ce'

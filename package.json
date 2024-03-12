@@ -1,0 +1,106 @@
+{
+  "name": "@ofqual/portal-organisations",
+  "version": "0.4.7",
+  "main": "dist/module/index.js",
+  "dependencies": {
+    "@material-ui/core": "^4.11.1",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/pickers": "^3.2.10",
+    "@ofqual/portal-auth": "^0.3.14",
+    "@ofqual/portal-client-shell": "^0.1.25",
+    "@ofqual/portal-components": "^0.1.29",
+    "@ofqual/portal-core": "^0.1.30",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-redux": "^7.1.9",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/sinon": "^9.0.8",
+    "copyfiles": "^2.3.0",
+    "date-fns": "^2.16.1",
+    "node-sass": "^4.14.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-hook-form": "^6.8.3",
+    "react-redux": "^7.2.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.1",
+    "redux-saga": "^1.1.3",
+    "rimraf": "^3.0.2",
+    "sinon": "^9.2.1",
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.2",
+    "use-debounce": "^5.0.1",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest --verbose --coverage",
+    "test:ci": "jest --ci --reporters=jest-junit --reporters=default --coverage --coverageReporters=cobertura --coverageReporters=html",
+    "eject": "react-scripts eject",
+    "dist": "rimraf dist; tsc --noEmit false; copyfiles -u 1 \"./src/**/*.png\" \"./src/**/*.svg\" \"./src/**/*.scss\" dist",
+    "testcafe:run": "testcafe testcafe/integration",
+    "testcafe:ci": "testcafe chrome:headless testcafe/integration --reporter spec,xunit:report.xml -s path=./artifacts/screenshots,takeOnFails=true,fullPage=true --app \"npm run start\" --app-init-delay 120000",
+    "testcafe:run/OrganisationList": "testcafe testcafe/integration/OrganisationList.ts",
+    "testcafe:run/OrganisationViewDetails": "testcafe testcafe/integration/OrganisationViewDetails.ts"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
+    "@babel/preset-typescript": "^7.12.1",
+    "@babel/runtime": "^7.12.5",
+    "babel-jest": "^26.6.3",
+    "jest-junit": "^12.0.0",
+    "testcafe": "^1.9.4",
+    "testcafe-reporter-xunit": "^2.1.0",
+    "testcafe-react-selectors": "^4.1.1"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less)$": "identity-obj-proxy"
+    },
+    "verbose": true,
+    "testURL": "http://localhost:8080/",
+    "transform": {
+      "\\.(ts|tsx)$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!\\@ofqual/portal-core/).+"
+    ],
+    "testMatch": [
+      "**/?(*.)+(spec|test).[jt]s?(x)"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.json"
+      }
+    }
+  }
+}
